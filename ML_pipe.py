@@ -86,4 +86,6 @@ get_train = PythonOperator(
     python_callable=train,
 )
 
-task1 >> get_dataXy >> get_train
+task1 >>
+
+get_dataXy >> get_train
