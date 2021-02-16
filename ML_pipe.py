@@ -16,7 +16,7 @@ from random import seed
 from numpy import mean
 from numpy import std
 from numpy import absolute
-
+from textwrap import dedent
 
 default_args = {
     'owner': 'MohamedSabri',
@@ -38,11 +38,7 @@ dag = DAG(
 )
 
 def get_dataset(**kwargs):
-    from textwrap import dedent
     from sklearn.datasets import make_regression
-    from sklearn.linear_model import LinearRegression
-    from sklearn.model_selection import cross_val_score
-    from sklearn.model_selection import RepeatedKFold
     ti = kwargs['ti']
     X, y = make_regression(n_samples=100, n_features=1, tail_strength=0.9, effective_rank=1, n_informative=1, noise=3, bias=50, random_state=1)
 	# add some artificial outliers
@@ -65,6 +61,9 @@ def evaluate_model(X, y, model):
 	return absolute(scores)
 
 def train(**kwargs):
+    from sklearn.linear_model import LinearRegression
+    from sklearn.model_selection import cross_val_score
+    from sklearn.model_selection import RepeatedKFold
     ti = kwargs['ti']
     X = ti.xcom_pull(task_ids='get_dataset', key='get_X')
     y = ti.xcom_pull(task_ids='get_dataset', key='get_y')
