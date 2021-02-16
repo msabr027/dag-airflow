@@ -77,7 +77,7 @@ task1 = BashOperator(
         )
 
 task2 = BashOperator(
-            task_id='install_pkg',
+            task_id='install_pkg2',
             bash_command='pip install textwrap3',
         )
 
