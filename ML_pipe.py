@@ -76,11 +76,6 @@ task1 = BashOperator(
             bash_command='pip install scikit-learn',
         )
 
-task2 = BashOperator(
-            task_id='install_pkg2',
-            bash_command='pip install textwrap3',
-        )
-
 get_dataXy = PythonOperator(
     task_id='get_data',
     python_callable=get_dataset,
@@ -91,4 +86,4 @@ get_train = PythonOperator(
     python_callable=train,
 )
 
-task1 >> task2 >>  get_dataXy >> get_train
+task1 >> get_dataXy >> get_train
