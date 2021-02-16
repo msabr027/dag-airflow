@@ -15,11 +15,6 @@ from random import seed
 from numpy import mean
 from numpy import std
 from numpy import absolute
-from sklearn.datasets import make_regression
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import RepeatedKFold
-from textwrap import dedent
 
 
 default_args = {
@@ -42,6 +37,11 @@ dag = DAG(
 )
 
 def get_dataset(**kwargs):
+    from textwrap import dedent
+    from sklearn.datasets import make_regression
+    from sklearn.linear_model import LinearRegression
+    from sklearn.model_selection import cross_val_score
+    from sklearn.model_selection import RepeatedKFold
     ti = kwargs['ti']
     X, y = make_regression(n_samples=100, n_features=1, tail_strength=0.9, effective_rank=1, n_informative=1, noise=3, bias=50, random_state=1)
 	# add some artificial outliers
@@ -72,6 +72,16 @@ def train(**kwargs):
     results = evaluate_model(X, y, model)
     print('Mean MAE: %.3f (%.3f)' % (mean(results), std(results)))
 
+task1 = BashOperator(
+            task_id='install_pkg',
+            bash_command='pip install scikit-learn',
+        )
+
+task2 = BashOperator(
+            task_id='install_pkg',
+            bash_command='pip install textwrap3',
+        )
+
 get_dataXy = PythonOperator(
     task_id='get_data',
     python_callable=get_dataset,
@@ -84,4 +94,4 @@ get_train = PythonOperator(
 )
 get_train.doc_md = dedent()
 
-get_dataXy >> get_train
+task1 >> task2 >>  get_dataXy >> get_train
