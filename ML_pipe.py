@@ -16,7 +16,6 @@ from random import seed
 from numpy import mean
 from numpy import std
 from numpy import absolute
-from textwrap import dedent
 
 default_args = {
     'owner': 'MohamedSabri',
@@ -86,12 +85,10 @@ get_dataXy = PythonOperator(
     task_id='get_data',
     python_callable=get_dataset,
 )
-get_dataXy.doc_md = dedent()
 
 get_train = PythonOperator(
     task_id='train_model',
     python_callable=train,
 )
-get_train.doc_md = dedent()
 
 task1 >> task2 >>  get_dataXy >> get_train
