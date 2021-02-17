@@ -7,8 +7,7 @@ Created on Tue Feb 16 09:18:17 2021
 
 from datetime import timedelta
 from airflow import DAG
-from airflow.operators.python import PythonOperator
-from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonVirtualenvOperator
 from airflow.utils.dates import days_ago
 from random import random
 from random import randint
