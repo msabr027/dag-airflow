@@ -44,11 +44,11 @@ with DAG(
 		# add some artificial outliers
 		seed(1)
 		for i in range(10):
-		factor = randint(2, 4)
-		if random() > 0.5:
-		    X[i] += factor * X.std()
-		else:
-		    X[i] -= factor * X.std()  
+			factor = randint(2, 4)
+			if random() > 0.5:
+				X[i] += factor * X.std()
+			else:
+				X[i] -= factor * X.std()  
 		ti.xcom_push('get_X', X)
 		ti.xcom_push('get_y', y)
 
