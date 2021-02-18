@@ -19,13 +19,7 @@ from numpy import absolute
 
 default_args = {
     'owner': 'MohamedSabri',
-    'depends_on_past': False,
-    'email': ['msabri@necando.com'],
-    'email_on_failure': True,
-    'email_on_retry': True,
     'provide_context': True,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
 }
 
 with DAG(
