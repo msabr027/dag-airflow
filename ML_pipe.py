@@ -72,6 +72,7 @@ with DAG(
 	    requirements=["scikit-learn"],
 	    system_site_packages=False,
 	    dag=dag,
+	    provide_context=True
 	)
 
 	get_train = PythonVirtualenvOperator(
@@ -80,6 +81,7 @@ with DAG(
 	    requirements=["scikit-learn"],
 	    system_site_packages=False,
 	    dag=dag,
+	    provide_context=True
 	)
 
 
