@@ -25,6 +25,7 @@ default_args = {
     'email_on_retry': True,
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
+    'provide_context': True,
 }
 
 with DAG(
@@ -78,7 +79,6 @@ with DAG(
 	    python_callable=get_dataset,
 	    requirements=["scikit-learn"],
 	    system_site_packages=False,
-	    provide_context=True,
 	    dag=dag,
 	)
 
@@ -87,7 +87,6 @@ with DAG(
 	    python_callable=train,
 	    requirements=["scikit-learn"],
 	    system_site_packages=False,
-	    provide_context=True,
 	    dag=dag,
 	)
 
