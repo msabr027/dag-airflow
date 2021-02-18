@@ -69,6 +69,7 @@ with DAG(
 	get_dataXy = PythonVirtualenvOperator(
 	    task_id="get_data",
 	    python_callable=get_dataset,
+	    do_xcom_push=True,
 	    requirements=["scikit-learn"],
 	    system_site_packages=False,
 	    dag=dag,
