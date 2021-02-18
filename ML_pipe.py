@@ -9,9 +9,7 @@ from datetime import timedelta
 from airflow import DAG
 from airflow.operators.python import PythonVirtualenvOperator
 from airflow.utils.dates import days_ago
-from random import random
-from random import randint
-from random import seed
+import random
 from numpy import mean
 from numpy import std
 from numpy import absolute
@@ -36,10 +34,10 @@ with DAG(
 		from sklearn.datasets import make_regression 
 		X, y = make_regression(n_samples=100, n_features=1, tail_strength=0.9, effective_rank=1, n_informative=1, noise=3, bias=50, random_state=1)
 		# add some artificial outliers
-		seed(1)
+		random.seed(1)
 		for i in range(10):
-			factor = randint(2, 4)
-			if random() > 0.5:
+			factor = random.randint(2, 4)
+			if random.random() > 0.5:
 				X[i] += factor * X.std()
 			else:
 				X[i] -= factor * X.std()  
