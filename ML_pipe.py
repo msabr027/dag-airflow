@@ -78,6 +78,7 @@ with DAG(
 	    python_callable=get_dataset,
 	    requirements=["scikit-learn"],
 	    system_site_packages=False,
+	    provide_context=True,
 	    dag=dag,
 	)
 
@@ -86,6 +87,7 @@ with DAG(
 	    python_callable=train,
 	    requirements=["scikit-learn"],
 	    system_site_packages=False,
+	    provide_context=True,
 	    dag=dag,
 	)
 
