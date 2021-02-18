@@ -25,7 +25,7 @@ default_args = {
     'email_on_retry': True,
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
-    'provide_context': True,
+    'provide_context': True
 }
 
 with DAG(
