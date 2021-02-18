@@ -23,9 +23,9 @@ default_args = {
     'email': ['msabri@necando.com'],
     'email_on_failure': True,
     'email_on_retry': True,
+    'provide_context': True,
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
-    'provide_context': True
 }
 
 with DAG(
