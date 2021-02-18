@@ -31,8 +31,8 @@ with DAG(
     tags=['ML'],
 ) as dag:
 
-	def get_dataset(*args, **kwargs):
-		ti = kwargs['ti']
+	def get_dataset(**context):
+		
 		from sklearn.datasets import make_regression 
 		X, y = make_regression(n_samples=100, n_features=1, tail_strength=0.9, effective_rank=1, n_informative=1, noise=3, bias=50, random_state=1)
 		# add some artificial outliers
@@ -43,12 +43,12 @@ with DAG(
 				X[i] += factor * X.std()
 			else:
 				X[i] -= factor * X.std()  
-		ti.xcom_push('get_X', X)
-		ti.xcom_push('get_y', y)
+		context['ti'].xcom_push('get_X', X)
+		context['ti'].xcom_push('get_y', y)
 
 
 
-	def train(*args, **kwargs):
+	def train(**context):
 		from sklearn.linear_model import LinearRegression
 		from sklearn.model_selection import cross_val_score
 		from sklearn.model_selection import RepeatedKFold
@@ -60,9 +60,8 @@ with DAG(
 			scores = cross_val_score(model, X, y, scoring='neg_mean_absolute_error', cv=cv, n_jobs=-1)
 			# force scores to be positive
 			return absolute(scores)
-		ti = kwargs['ti']
-		X = ti.xcom_pull(task_ids='get_dataset', key='get_X')
-		y = ti.xcom_pull(task_ids='get_dataset', key='get_y')
+		X = context['ti'].xcom_pull(task_ids='get_dataset', key='get_X')
+		y = context['ti'].xcom_pull(task_ids='get_dataset', key='get_y')
 		model = LinearRegression()
 		# evaluate model
 		results = evaluate_model(X, y, model)
