@@ -82,5 +82,4 @@ with DAG(
 	    dag=dag,
 	)
 
-
-	get_dataXy >> get_train
+	get_dataXy.set_downstream(get_train)
