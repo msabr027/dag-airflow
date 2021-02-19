@@ -71,12 +71,14 @@ with DAG(
 	get_dataXy = PythonOperator(
 	    task_id="get_data",
 	    python_callable=get_dataset,
+	    provide_context=True,
 	    dag=dag,
 	)
 
 	get_train = PythonOperator(
 	    task_id="train_model",
 	    python_callable=train,
+	    provide_context=True,
 	    dag=dag,
 	)
 
