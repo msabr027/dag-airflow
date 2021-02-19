@@ -19,6 +19,8 @@ from sklearn.model_selection import RepeatedKFold
 from numpy import absolute
 from numpy import mean
 from numpy import std
+import json
+from numpyencoder import NumpyEncoder
 
 default_args = {
     'owner': 'MohamedSabri',
@@ -43,7 +45,9 @@ with DAG(
 			if random.random() > 0.5:
 				X[i] += factor * X.std()
 			else:
-				X[i] -= factor * X.std()  
+				X[i] -= factor * X.std() 
+		X = json.dumps(X,cls=NumpyEncoder)
+		y = json.dumps(y,cls=NumpyEncoder)
 		context['ti'].xcom_push('get_X', X)
 		context['ti'].xcom_push('get_y', y)
 
@@ -59,6 +63,8 @@ with DAG(
 			return absolute(scores)
 		X = context['ti'].xcom_pull(task_ids='get_dataset', key='get_X')
 		y = context['ti'].xcom_pull(task_ids='get_dataset', key='get_y')
+		X = json.loads(X)
+		y = json.loads(y)
 		model = LinearRegression()
 		# evaluate model
 		results = evaluate_model(X, y, model)
