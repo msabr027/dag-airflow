@@ -63,8 +63,8 @@ with DAG(
 			return absolute(scores)
 		X = context['ti'].xcom_pull(task_ids='get_dataset', key='get_X')
 		y = context['ti'].xcom_pull(task_ids='get_dataset', key='get_y')
-		X = json.loads(X)
-		y = json.loads(y)
+		X = X.values()
+		y = y.values()
 		model = LinearRegression()
 		# evaluate model
 		results = evaluate_model(X, y, model)
