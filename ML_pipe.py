@@ -63,12 +63,8 @@ with DAG(
 			return absolute(scores)
 		X = context['ti'].xcom_pull(task_ids='get_dataset', key='get_X')
 		y = context['ti'].xcom_pull(task_ids='get_dataset', key='get_y')
-		X = X.values()
-		y = y.values()
-		model = LinearRegression()
-		# evaluate model
-		results = evaluate_model(X, y, model)
-		print('Mean MAE: %.3f (%.3f)' % (mean(results), std(results)))
+		print(X)
+		print(y)
 
 	get_dataXy = PythonOperator(
 	    task_id="get_data",
