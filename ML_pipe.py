@@ -36,7 +36,8 @@ with DAG(
     tags=['ML'],
 ) as dag:
 
-	def get_dataset(**context):
+	def get_dataset(**kwargs):
+		ti = kwargs['ti']
 		X, y = make_regression(n_samples=100, n_features=1, tail_strength=0.9, effective_rank=1, n_informative=1, noise=3, bias=50, random_state=1)
 		# add some artificial outliers
 		random.seed(1)
@@ -48,12 +49,13 @@ with DAG(
 				X[i] -= factor * X.std() 
 		X = json.dumps(X,cls=NumpyEncoder)
 		y = json.dumps(y,cls=NumpyEncoder)
-		context['ti'].xcom_push('get_X', X)
-		context['ti'].xcom_push('get_y', y)
+		ti.xcom_push('get_X', X)
+		ti.xcom_push('get_y', y)
 
 
 
-	def train(**context):
+	def train(**kwargs):
+		ti = kwargs['ti']
 		def evaluate_model(X, y, model):
 			# define model evaluation method
 			cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
@@ -61,8 +63,8 @@ with DAG(
 			scores = cross_val_score(model, X, y, scoring='neg_mean_absolute_error', cv=cv, n_jobs=-1)
 			# force scores to be positive
 			return absolute(scores)
-		X = context['ti'].xcom_pull(task_ids='get_dataset', key='get_X')
-		y = context['ti'].xcom_pull(task_ids='get_dataset', key='get_y')
+		X = ti.xcom_pull(task_ids='get_dataset', key='get_X')
+		y = ti.xcom_pull(task_ids='get_dataset', key='get_y')
 		print(X)
 		print(y)
 
