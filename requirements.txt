@@ -1,2 +1,3 @@
 scikit-learn
 textwrap3
+numpyencoder
