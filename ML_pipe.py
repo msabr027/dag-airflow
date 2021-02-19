@@ -7,10 +7,18 @@ Created on Tue Feb 16 09:18:17 2021
 
 from datetime import timedelta
 from airflow import DAG
-from airflow.operators.python import PythonVirtualenvOperator
+from airflow.operators.python_operator import PythonOperator
 from airflow.utils.dates import days_ago
-
-
+import random
+from sklearn.datasets import make_regression 
+from numpy import mean
+from numpy import std
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import RepeatedKFold
+from numpy import absolute
+from numpy import mean
+from numpy import std
 
 default_args = {
     'owner': 'MohamedSabri',
@@ -27,10 +35,6 @@ with DAG(
 ) as dag:
 
 	def get_dataset(**context):
-		import random
-		from sklearn.datasets import make_regression 
-		from numpy import mean
-		from numpy import std
 		X, y = make_regression(n_samples=100, n_features=1, tail_strength=0.9, effective_rank=1, n_informative=1, noise=3, bias=50, random_state=1)
 		# add some artificial outliers
 		random.seed(1)
@@ -46,12 +50,6 @@ with DAG(
 
 
 	def train(**context):
-		from sklearn.linear_model import LinearRegression
-		from sklearn.model_selection import cross_val_score
-		from sklearn.model_selection import RepeatedKFold
-		from numpy import absolute
-		from numpy import mean
-		from numpy import std
 		def evaluate_model(X, y, model):
 			# define model evaluation method
 			cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
@@ -66,23 +64,16 @@ with DAG(
 		results = evaluate_model(X, y, model)
 		print('Mean MAE: %.3f (%.3f)' % (mean(results), std(results)))
 
-	get_dataXy = PythonVirtualenvOperator(
+	get_dataXy = PythonOperator(
 	    task_id="get_data",
 	    python_callable=get_dataset,
-	    do_xcom_push=True,
-	    requirements=["scikit-learn"],
-	    system_site_packages=False,
 	    dag=dag,
-	    provide_context=True
 	)
 
-	get_train = PythonVirtualenvOperator(
+	get_train = PythonOperator(
 	    task_id="train_model",
 	    python_callable=train,
-	    requirements=["scikit-learn"],
-	    system_site_packages=False,
 	    dag=dag,
-	    provide_context=True
 	)
 
 
